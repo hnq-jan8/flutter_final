@@ -26,6 +26,8 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   int selectedIndex = 0;
 
+  final fieldText = TextEditingController();
+
   List screen = [
     [
       'box 0',
@@ -73,6 +75,24 @@ class _HomeWidgetState extends State<HomeWidget> {
     setState(() {
       selectedIndex = index;
       foundValues = screen[selectedIndex];
+      fieldText.clear();
+    });
+  }
+
+  void updateFilter(String enteredWord) {
+    List<String> results = [];
+    if (enteredWord.isEmpty) {
+      results = screen[selectedIndex];
+    } else {
+      screen[selectedIndex].forEach((element) {
+        if (element.toLowerCase().contains(enteredWord.toLowerCase().trim())) {
+          results.add(element);
+        }
+      });
+    }
+
+    setState(() {
+      foundValues = results;
     });
   }
 
@@ -89,6 +109,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               padding: const EdgeInsets.all(7),
               child: TextField(
                 onChanged: (value) => updateFilter(value),
+                controller: fieldText,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.search),
                   labelText: '\tSearch',
@@ -139,22 +160,5 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ],
         ));
-  }
-
-  void updateFilter(String enteredWord) {
-    List<String> results = [];
-    if (enteredWord.isEmpty) {
-      results = screen[selectedIndex];
-    } else {
-      screen[selectedIndex].forEach((element) {
-        if (element.toLowerCase().contains(enteredWord.toLowerCase().trim())) {
-          results.add(element);
-        }
-      });
-    }
-
-    setState(() {
-      foundValues = results;
-    });
   }
 }
